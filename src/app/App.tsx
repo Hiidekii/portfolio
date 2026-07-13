@@ -244,7 +244,11 @@ export default function App() {
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
-    if (el) { el.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); }
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      setActiveSection(id);
+      setMenuOpen(false);
+    }
   };
 
   useEffect(() => {
