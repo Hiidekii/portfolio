@@ -223,12 +223,17 @@ export default function App() {
   const [formData, setFormData] = useState({ nombre: "", email: "", asunto: "", mensaje: "" });
   const t = T[lang];
 
-  const handleDownloadCV = async () => {
+  const handleDownloadCV = () => {
+    // Construimos la ruta dinámica basada en la configuración de Vite
+    const fileName = "Hideki_Sotero_Business_Analyst.pdf";
+    const filePath = `${import.meta.env.BASE_URL}${fileName}`;
+
     const link = document.createElement("a");
-    // Al estar en la carpeta public, la ruta raíz "/" apunta directamente ahí
-    link.href = "/Hideki_Sotero_Business_Analyst.pdf";
+    link.href = filePath;
     link.download = "Hideki_Sotero_CV.pdf";
-    document.body.appendChild(link); // Necesario para algunos navegadores
+  
+    // Esto es necesario para que funcione en algunos navegadores
+    document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
