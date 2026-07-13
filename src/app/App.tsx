@@ -224,22 +224,20 @@ export default function App() {
   const t = T[lang];
 
   const handleDownloadCV = () => {
-    // Al estar en la carpeta 'public', el archivo se sirve en la raíz.
-    // Usamos una ruta absoluta sin el slash inicial redundante si estamos en producción.
-    const fileName = "Hideki_Sotero_Business_Analyst.pdf";
+    // Usamos la ruta que confirmaste que funciona
+    const fileUrl = "https://hiidekii.github.io/portfolio/Hideki_Sotero_Business_Analyst.pdf";
   
-    // Esta es la forma más segura de obtener la ruta raíz correcta en Vite
-    const filePath = `${import.meta.env.BASE_URL}${fileName}`.replace(/\/+/g, '/');
-
     const link = document.createElement("a");
-    link.href = filePath;
-    link.download = "Hideki_Sotero_CV.pdf";
+    link.href = fileUrl;
   
-    // Forzamos la descarga
-    link.target = "_blank"; 
+    // Esto sugiere al navegador que descargue el archivo en lugar de abrirlo
+    link.setAttribute("download", "Hideki_Sotero_CV.pdf");
   
+    // Añadimos al DOM para compatibilidad y ejecutamos el clic
     document.body.appendChild(link);
     link.click();
+  
+    // Limpieza
     document.body.removeChild(link);
   };
 
