@@ -224,14 +224,13 @@ export default function App() {
   const t = T[lang];
 
   const handleDownloadCV = async () => {
-    const response = await fetch("/Hideki_Sotero_CV.pdf");
-    const blob = await response.blob();
-    const url = URL.createObjectURL(new Blob([blob], { type: "application/pdf" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Hideki_Sotero_CV.pdf";
-    a.click();
-    URL.revokeObjectURL(url);
+    const link = document.createElement("a");
+    // Al estar en la carpeta public, la ruta raíz "/" apunta directamente ahí
+    link.href = "/Hideki_Sotero_Business_Analyst.pdf";
+    link.download = "Hideki_Sotero_CV.pdf";
+    document.body.appendChild(link); // Necesario para algunos navegadores
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleWhatsApp = (e: React.FormEvent) => {
