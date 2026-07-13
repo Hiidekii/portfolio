@@ -223,14 +223,15 @@ export default function App() {
   const [formData, setFormData] = useState({ nombre: "", email: "", asunto: "", mensaje: "" });
   const t = T[lang];
 
-  const handleDownloadCV = () => {
-    const link = document.createElement("a");
-    // Al estar en la carpeta public, la ruta raíz "/" apunta directamente ahí
-    link.href = "/Hideki_Sotero_Business_Analyst.pdf";
-    link.download = "Hideki_Sotero_CV.pdf";
-    document.body.appendChild(link); // Necesario para algunos navegadores
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadCV = async () => {
+    const response = await fetch("/Hideki_Sotero_CV.pdf");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(new Blob([blob], { type: "application/pdf" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Hideki_Sotero_CV.pdf";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleWhatsApp = (e: React.FormEvent) => {
@@ -271,9 +272,9 @@ export default function App() {
       {/* ── Sidebar Desktop ── */}
       <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-56 flex-col border-r border-border bg-card z-40 px-6 py-8">
         <div className="mb-6">
-          <p className="text-sm font-mono text-muted-foreground tracking-widest uppercase mb-2">{t.portfolio}</p>
-          <h1 className="text-3xl font-bold text-foreground leading-tight tracking-tight">Hideki<br />Sotero</h1>
-          <p className="text-base text-accent mt-2 font-mono">{t.role}</p>
+          <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase mb-2">{t.portfolio}</p>
+          <h1 className="text-xl font-bold text-foreground leading-tight tracking-tight">Hideki<br />Sotero</h1>
+          <p className="text-xs text-accent mt-1.5 font-mono">{t.role}</p>
         </div>
 
         <LangToggle className="mb-6 self-start" />
@@ -284,7 +285,7 @@ export default function App() {
               <li key={NAV_IDS[i]}>
                 <button
                   onClick={() => scrollTo(NAV_IDS[i])}
-                  className={`w-full text-left text-[17px] px-3 py-3 rounded-sm transition-all duration-150 flex items-center gap-2.5 ${
+                  className={`w-full text-left text-sm px-3 py-2 rounded-sm transition-all duration-150 flex items-center gap-2.5 ${
                     activeSection === NAV_IDS[i]
                       ? "text-accent bg-accent/10 font-medium"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -343,44 +344,44 @@ export default function App() {
 
           <div className="relative w-full flex flex-col xl:flex-row xl:items-center">
             <div className="flex-1 max-w-3xl">
-              <div className="flex items-center gap-3 mb-8">
-                <Terminal size={16} className="text-accent" />
-                <span className="font-mono text-base text-accent/80 tracking-widest">{t.heroLabel}</span>
+              <div className="flex items-center gap-3 mb-6">
+                <Terminal size={12} className="text-accent" />
+                <span className="font-mono text-xs text-accent/80 tracking-widest">{t.heroLabel}</span>
               </div>
 
-              <h1 className="text-7xl md:text-9xl font-extrabold text-foreground leading-none tracking-tighter mb-6">
+              <h1 className="text-5xl md:text-7xl font-extrabold text-foreground leading-none tracking-tighter mb-5">
                 Hideki<br />
                 <span className="text-transparent" style={{ WebkitTextStroke: "1px rgba(96,165,250,0.5)" }}>Sotero</span>
               </h1>
 
-              <div className="mb-6">
-                <p className="text-2xl md:text-3xl text-muted-foreground font-light tracking-wide leading-snug">
+              <div className="mb-5">
+                <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide leading-snug">
                   {t.heroSubtitle[0]}<br />{t.heroSubtitle[1]}
                 </p>
               </div>
 
-              <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed mb-4">{t.heroDesc}</p>
+              <p className="text-sm text-muted-foreground max-w-xl leading-relaxed mb-4">{t.heroDesc}</p>
 
-              <div className="flex items-center gap-2 text-base text-muted-foreground mb-10">
-                <MapPin size={14} className="text-accent" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+                <MapPin size={13} className="text-accent" />
                 <span>{t.heroLocation}</span>
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <button onClick={() => scrollTo("projects")} className="px-6 py-3 bg-primary text-primary-foreground text-base font-semibold rounded-sm hover:bg-primary/80 transition-colors flex items-center gap-2">
-                  {t.btnProjects} <ArrowUpRight size={17} />
+                <button onClick={() => scrollTo("projects")} className="px-5 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-sm hover:bg-primary/80 transition-colors flex items-center gap-2">
+                  {t.btnProjects} <ArrowUpRight size={15} />
                 </button>
-                <button onClick={() => scrollTo("contact")} className="px-6 py-3 border border-border text-foreground text-base font-medium rounded-sm hover:border-accent/60 hover:text-accent transition-all">
+                <button onClick={() => scrollTo("contact")} className="px-5 py-2.5 border border-border text-foreground text-sm font-medium rounded-sm hover:border-accent/60 hover:text-accent transition-all">
                   {t.btnContact}
                 </button>
               </div>
             </div>
 
-            <div className="hidden xl:flex flex-col gap-8 shrink-0 border-l border-border pl-10 pr-10 ml-auto">
+            <div className="hidden xl:flex flex-col gap-6 shrink-0 border-l border-border pl-10 pr-10 ml-auto">
               {t.stats.map(({ label, value }) => (
                 <div key={label} className="text-right">
-                  <div className="text-5xl font-extrabold text-accent leading-none">{value}</div>
-                  <div className="text-sm font-mono text-muted-foreground/70 uppercase tracking-wider mt-1.5">{label}</div>
+                  <div className="text-4xl font-extrabold text-accent leading-none">{value}</div>
+                  <div className="text-xs font-mono text-muted-foreground/70 uppercase tracking-wider mt-1">{label}</div>
                 </div>
               ))}
             </div>
@@ -393,9 +394,9 @@ export default function App() {
             <SectionLabel number="01" title={t.aboutTitle} />
             <div className="grid lg:grid-cols-5 gap-12 mt-14">
               <div className="lg:col-span-3 space-y-5">
-                <p className="text-lg text-muted-foreground leading-relaxed">{t.aboutBio[0]}</p>
-                <p className="text-lg text-muted-foreground leading-relaxed">{t.aboutBio[1]}</p>
-                <p className="text-lg text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">{t.aboutBio[0]}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t.aboutBio[1]}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {lang === "es"
                     ? <>Me interesa profundamente el <span className="text-foreground font-semibold">business analytics</span> y el core del negocio, buscando siempre traducir datos e insights técnicos en <span className="text-foreground font-semibold">estrategia digital y valor real</span> para las organizaciones.</>
                     : <>I am deeply interested in <span className="text-foreground font-semibold">business analytics</span> and the core of the business, always seeking to translate data and technical insights into <span className="text-foreground font-semibold">digital strategy and real value</span> for organizations.</>
@@ -404,11 +405,11 @@ export default function App() {
                 <div className="pt-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Briefcase size={15} className="text-accent" />
-                    <span className="text-sm font-mono text-muted-foreground uppercase tracking-widest">{t.interestsLabel}</span>
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">{t.interestsLabel}</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {t.interests.map((tag) => (
-                      <span key={tag} className="text-sm px-3 py-1.5 bg-secondary rounded-sm text-secondary-foreground border border-border">{tag}</span>
+                      <span key={tag} className="text-xs px-2.5 py-1 bg-secondary rounded-sm text-secondary-foreground border border-border">{tag}</span>
                     ))}
                   </div>
                 </div>
@@ -416,8 +417,8 @@ export default function App() {
               <div className="lg:col-span-2 grid grid-cols-2 gap-3">
                 {t.stats.map(({ label, value }) => (
                   <div key={label} className="border border-border rounded-sm p-5 bg-card hover:border-accent/30 transition-colors">
-                    <div className="text-3xl font-extrabold text-accent mb-1.5">{value}</div>
-                    <div className="text-sm text-muted-foreground leading-snug">{label}</div>
+                    <div className="text-2xl font-extrabold text-accent mb-1">{value}</div>
+                    <div className="text-xs text-muted-foreground leading-snug">{label}</div>
                   </div>
                 ))}
               </div>
@@ -439,13 +440,13 @@ export default function App() {
                         <Icon size={16} className="text-accent" />
                       </div>
                       <div>
-                        <p className="text-base font-semibold text-foreground">{domain}</p>
-                        <p className="text-sm font-mono text-muted-foreground">{level}</p>
+                        <p className="text-sm font-semibold text-foreground">{domain}</p>
+                        <p className="text-xs font-mono text-muted-foreground">{level}</p>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {items.map((item) => (
-                        <span key={item} className="text-sm px-3 py-1 rounded-sm bg-secondary text-secondary-foreground border border-border/80 group-hover:border-accent/15 transition-colors">{item}</span>
+                        <span key={item} className="text-xs px-2.5 py-1 rounded-sm bg-secondary text-secondary-foreground border border-border/80 group-hover:border-accent/15 transition-colors">{item}</span>
                       ))}
                     </div>
                   </div>
@@ -469,14 +470,14 @@ export default function App() {
                   <div className="pb-12">
                     <p className="text-sm font-mono text-muted-foreground mb-2 tracking-wider">{exp.period}</p>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-xl font-semibold text-foreground">{exp.role}</h3>
-                      {exp.current && <span className="text-xs font-mono px-2 py-0.5 bg-accent/10 text-accent rounded-sm border border-accent/20">{t.actualBadge}</span>}
+                      <h3 className="text-base font-semibold text-foreground">{exp.role}</h3>
+                      {exp.current && <span className="text-[10px] font-mono px-2 py-0.5 bg-accent/10 text-accent rounded-sm border border-accent/20">{t.actualBadge}</span>}
                     </div>
-                    <p className="text-base text-accent mb-3">{exp.company}</p>
-                    <p className="text-lg text-muted-foreground leading-relaxed mb-4 max-w-2xl">{exp.description}</p>
+                    <p className="text-sm text-accent mb-2">{exp.company}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-3 max-w-2xl">{exp.description}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {exp.highlights.map((tag) => (
-                        <span key={tag} className="text-sm px-3 py-1 bg-primary/10 text-accent/80 rounded-sm border border-accent/15">{tag}</span>
+                        <span key={tag} className="text-xs px-2.5 py-0.5 bg-primary/10 text-accent/80 rounded-sm border border-accent/15">{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -494,14 +495,14 @@ export default function App() {
               {t.projects.map((project) => (
                 <div key={project.number} className="border border-border rounded-sm p-6 bg-card hover:border-accent/40 transition-all duration-300 group flex flex-col">
                   <div className="flex justify-between items-start mb-5">
-                    <span className="text-5xl font-extrabold text-border group-hover:text-accent/15 transition-colors font-mono leading-none">{project.number}</span>
-                    <span className="text-sm font-mono text-muted-foreground px-3 py-1 bg-secondary rounded-sm border border-border">{project.type}</span>
+                    <span className="text-4xl font-extrabold text-border group-hover:text-accent/15 transition-colors font-mono leading-none">{project.number}</span>
+                    <span className="text-xs font-mono text-muted-foreground px-2 py-1 bg-secondary rounded-sm border border-border">{project.type}</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">{project.name}</h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed flex-1 mb-5">{project.description}</p>
+                  <h3 className="text-sm font-semibold text-foreground mb-2">{project.name}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">{project.description}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {project.stack.map((tech) => (
-                      <span key={tech} className="text-sm px-3 py-1 bg-primary/10 text-accent/80 rounded-sm">{tech}</span>
+                      <span key={tech} className="text-xs px-2.5 py-0.5 bg-primary/10 text-accent/80 rounded-sm">{tech}</span>
                     ))}
                   </div>
                 </div>
@@ -516,13 +517,13 @@ export default function App() {
             <SectionLabel number="05" title={t.contactTitle} />
             <div className="grid md:grid-cols-2 gap-14 mt-14">
               <div>
-                <h2 className="text-3xl font-bold text-foreground mb-4 tracking-tight">{t.contactHeading}</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">{t.contactDesc}</p>
-                <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">{t.contactHeading}</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-6">{t.contactDesc}</p>
+                <div className="space-y-3">
                   {t.contactLinks.map(({ label, href }, i) => {
                     const Icon = CONTACT_ICONS[i];
                     return (
-                      <a key={label} href={href} target={href.startsWith("mailto") ? undefined : "_blank"} rel="noreferrer" className="flex items-center gap-3 text-base text-muted-foreground hover:text-accent transition-colors group">
+                      <a key={label} href={href} target={href.startsWith("mailto") ? undefined : "_blank"} rel="noreferrer" className="flex items-center gap-3 text-sm text-muted-foreground hover:text-accent transition-colors group">
                         <Icon size={15} className="text-accent shrink-0" />
                         <span>{label}</span>
                         <ChevronRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
@@ -533,7 +534,7 @@ export default function App() {
                 <div className="mt-8 pt-6 border-t border-border">
                   <button
                     onClick={handleDownloadCV}
-                    className="inline-flex items-center gap-3 px-6 py-3 bg-accent text-accent-foreground text-base font-extrabold rounded-sm hover:bg-accent/80 transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-foreground text-sm font-extrabold rounded-sm hover:bg-accent/80 transition-colors"
                   >
                     <Download size={18} />
                     {t.downloadCV}
@@ -555,8 +556,8 @@ export default function App() {
                     className="w-full px-4 py-2.5 bg-card border border-border rounded-sm text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-accent/60 transition-colors resize-none"
                   />
                 </div>
-                <button type="submit" className="w-full py-3 bg-primary text-primary-foreground text-base font-semibold rounded-sm hover:bg-primary/80 transition-colors flex items-center justify-center gap-2">
-                  {t.formSend} <ArrowUpRight size={17} />
+                <button type="submit" className="w-full py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-sm hover:bg-primary/80 transition-colors flex items-center justify-center gap-2">
+                  {t.formSend} <ArrowUpRight size={15} />
                 </button>
               </form>
             </div>
@@ -570,11 +571,11 @@ export default function App() {
 
 function SectionLabel({ number, title }: { number: string; title: string }) {
   return (
-    <div className="flex items-center gap-5">
-      <span className="font-mono text-2xl font-bold text-accent/60">{number}</span>
-      <div className="w-px h-7 bg-border" />
-      <h2 className="text-xl font-semibold uppercase tracking-widest text-muted-foreground">{title}</h2>
-      <div className="h-px flex-1 max-w-24 bg-border" />
+    <div className="flex items-center gap-4">
+      <span className="font-mono text-base font-bold text-accent/60">{number}</span>
+      <div className="w-px h-5 bg-border" />
+      <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">{title}</h2>
+      <div className="h-px flex-1 max-w-20 bg-border" />
     </div>
   );
 }
